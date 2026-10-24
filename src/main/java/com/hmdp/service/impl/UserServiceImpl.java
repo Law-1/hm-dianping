@@ -94,7 +94,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         //保存用户信息到redis中
         //随机生成token作为登录令牌
         String token = UUID.randomUUID().toString(true);
-        //将User对象转为HashMap存储
+        //将User对象转为HashMap存储      Hash结构可以将对象中的每个字段独立存储，可以针对单个字段做CRUD，并且占用内存更少
         UserDTO userDTO = BeanUtil.copyProperties(user, UserDTO.class);
         Map<String, Object> userMap = BeanUtil.beanToMap(userDTO, new HashMap<>(),
                 CopyOptions.create()
