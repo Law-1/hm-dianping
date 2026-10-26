@@ -208,7 +208,8 @@ public class CacheClient {
                 return null;
             }
             //存在，存入Redis
-            stringRedisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(r), time, unit);
+//            stringRedisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(r), time, unit);
+            this.set(key,r,time,unit);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }finally {
