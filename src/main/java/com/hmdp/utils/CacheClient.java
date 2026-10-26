@@ -198,6 +198,14 @@ public class CacheClient {
                 return queryWithMutex(keyPreFix,lockKeyPreFix, id, type, dbFallBack, time, unit);
             }
 
+            // ========== 新增：double check ==========
+            String jsonAgain = stringRedisTemplate.opsForValue().get(key);
+            if (StrUtil.isNotBlank(jsonAgain)) {
+                return JSONUtil.toBean(jsonAgain, type);
+            }
+            if(jsonAgain != null){
+                return null;
+            }
 
             //不存在，从数据库中查询
             r = dbFallBack.apply(id);
