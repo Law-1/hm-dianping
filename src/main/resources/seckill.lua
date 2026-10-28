@@ -26,5 +26,5 @@ redis.call('incrby', stockKey, -1)
 --下单
 redis.call('sadd', orderKey, userId)
 -- 发送消息到队列中
-redis.call('xadd', 'stream.order', '*', 'voucherId', voucherId, 'userId', userId, 'id', orderId)
+redis.call('xadd', 'stream.orders', '*', 'voucherId', voucherId, 'userId', userId, 'id', orderId)
 return 0

@@ -84,7 +84,7 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
                 try {
                     //获取消息队列中的订单信息 XREADGROUP GROUP g1 c1 COUNT 1 BLOCK 2000 STREAMS streams.order >
                     List<MapRecord<String, Object, Object>> list = stringRedisTemplate.opsForStream().read(
-                            Consumer.from("q1", "c1"),
+                            Consumer.from("g1", "c1"),
                             StreamReadOptions.empty().count(1).block(Duration.ofSeconds(2)),
                             StreamOffset.create(queueName, ReadOffset.lastConsumed())
                     );
@@ -347,7 +347,7 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
         boolean success = seckillVoucherService.update()
                 .setSql("stock = stock - 1")
                 .gt("stock", 0) // 增加条件：stock > 0，数据库层面校验库存>0才扣减 //todo: 防止超卖(推荐方法) 库存阈值判断
-                .eq("voucher_id", voucherOrder).update();
+                .eq("voucher_id", voucherOrder.getVoucherId()).update();
         if (!success) {
             log.error("库存不足");
         }

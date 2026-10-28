@@ -44,7 +44,7 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
 
 //    给ttl设置随机值防止缓存雪崩
     long totalTTLShop = CACHE_SHOP_TTL + RandomUtil.randomLong(0,3);
-    long totalTTLNull = CACHE_NULL_TTL + RandomUtil.randomLong(0,10);
+//    long totalTTLNull = CACHE_NULL_TTL + RandomUtil.randomLong(0,10);
 
     //根据ID查询商铺
     @Override
@@ -202,6 +202,7 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
         stringRedisTemplate.delete(key);
     }*/
 
+    //提前缓存热点key
 /*    public void saveShop2Redis(Long id, Long expireSeconds){
         //查询店铺数据
         Shop shop = getById(id);
@@ -274,7 +275,7 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
         });
         //根据店铺id查询店铺信息
         String idStr = StrUtil.join(",", ids);
-        List<Shop> shops = query().in("id", ids).last("ORDER BY FIELD(id" + idStr + ")").list();
+        List<Shop> shops = query().in("id", ids).last("ORDER BY FIELD(id," + idStr + ")").list();
         for (Shop shop : shops) {
             shop.setDistance(distanceMap.get(shop.getId().toString()).getValue());
         }
